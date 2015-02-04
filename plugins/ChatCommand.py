@@ -3,6 +3,9 @@ Just a dumb plugin to let me run !command arguments from ingame to fire off acti
 I will probably turn this into a useful generic plugin at some point but for now
 its just a testing bed for stuff
 """
+__author__ = "Morgan Creekmore"
+__copyright__ = "Copyright 2015, The SpockBot Project"
+__license__ = "MIT"
 
 from spock.mcp import mcdata
 from spock.utils import string_types

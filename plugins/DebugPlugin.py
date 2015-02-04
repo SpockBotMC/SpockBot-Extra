@@ -1,4 +1,10 @@
-#Constantly Changing, just a plugin I use to debug whatever is broken atm
+"""
+Constantly Changing, just a plugin I use to debug whatever is broken atm
+"""
+__author__ = "Nick Gamberini"
+__copyright__ = "Copyright 2015, The SpockBot Project"
+__license__ = "MIT"
+
 import sys
 import threading
 from spock.mcmap import mapdata

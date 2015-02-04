@@ -1,6 +1,10 @@
 """
 On a disconnect event, reconnects to the last connected server
 """
+__author__ = "Nick Gamberini, Morgan Creekmore"
+__copyright__ = "Copyright 2015, The SpockBot Project"
+__license__ = "MIT"
+
 from spock.mcp import mcpacket, mcdata
 
 class ReConnectPlugin:

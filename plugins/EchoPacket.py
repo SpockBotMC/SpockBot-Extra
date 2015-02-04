@@ -1,3 +1,10 @@
+"""
+A plugin that just echos every packet other than the chunk data and player position
+"""
+__author__ = "Nick Gamberini, Morgan Creekmore"
+__copyright__ = "Copyright 2015, The SpockBot Project"
+__license__ = "MIT"
+
 from spock.mcp.mcdata import hashed_structs
 from spock.mcp import mcdata
 
