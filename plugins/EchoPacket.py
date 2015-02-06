@@ -8,6 +8,9 @@ __license__ = "MIT"
 from spock.mcp.mcdata import hashed_structs
 from spock.mcp import mcdata
 
+import logging
+logger = logging.getLogger('spock')
+
 BLACKLIST = ['PLAY<Map Chunk Bulk', 'PLAY<Chunk Data', 'PLAY>Player Position']
 		#'PLAY<Entity Velocity', 'PLAY<Entity Relative Move', 'PLAY<Entity Look and Relative Move', 'PLAY<Entity Head Look', 'PLAY<Entity Look', 'PLAY<Entity Metadata', 'PLAY<Entity Teleport']
 
@@ -19,4 +22,4 @@ class EchoPacketPlugin:
 	def echopacket(self, name, packet):
 		#Dont print Chunk Data and Map Chunk Bulk
 		if packet.str_ident not in BLACKLIST:
-			print(packet)
+			logger.info(str(packet))

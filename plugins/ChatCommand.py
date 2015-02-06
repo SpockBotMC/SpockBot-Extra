@@ -7,6 +7,9 @@ __license__ = "MIT"
 
 from spock.utils import string_types
 
+import logging
+logger = logging.getLogger('spock')
+
 class ChatCommandPlugin:
 	def __init__(self, ploader, settings):
 		self.event = ploader.requires('Event')
@@ -17,7 +20,7 @@ class ChatCommandPlugin:
 	def handle_chat_message(self, name, packet):
 		chat_data = packet.data['json_data']
 		message = self.parse_chat(chat_data)
-		print('Chat:', message)
+		logger.info('Chat: %s', message)
 		try:
 			name_pos = message.find(' ')
 			if name_pos == -1:
@@ -38,7 +41,7 @@ class ChatCommandPlugin:
 			pass
 
 	def command_handle(self, player_name, command, args):
-		print("Command:", command)
+		logger.info("Command: %s", command)
 		if command == '':
 			return
 		self.event.emit('cmd_' + command, {'name':player_name, 'args':args})
