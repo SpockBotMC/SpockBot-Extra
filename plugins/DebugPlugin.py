@@ -14,6 +14,7 @@ import time
 
 class DebugPlugin:
 	def __init__(self, ploader, settings):
+		print('Debug Settings:', settings)
 		#for packet in mcdata.hashed_structs:
 		#	ploader.reg_event_handler(packet, self.debug)
 		self.physics = ploader.requires('Physics')
