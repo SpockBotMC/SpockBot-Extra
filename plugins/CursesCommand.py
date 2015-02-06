@@ -6,8 +6,8 @@ __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
 import curses,os,sys
-import logging
 
+import logging
 logger = logging.getLogger('spock')
 
 class Screen:
