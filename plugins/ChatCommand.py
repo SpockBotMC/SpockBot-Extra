@@ -1,21 +1,15 @@
 """
-Just a dumb plugin to let me run !command arguments from ingame to fire off actions
-I will probably turn this into a useful generic plugin at some point but for now
-its just a testing bed for stuff
+Commands can be sent to spock in the format !command args from ingame chat
 """
 __author__ = "Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
-from spock.mcp import mcdata
 from spock.utils import string_types
-import datetime
 
 class ChatCommandPlugin:
 	def __init__(self, ploader, settings):
-		self.physics = ploader.requires('Physics')
-		self.net = ploader.requires('Net')
-		self.inventory = ploader.requires('Inventory')
+		self.event = ploader.requires('Event')
 		ploader.reg_event_handler(
 			'PLAY<Chat Message', self.handle_chat_message
 		)
@@ -46,28 +40,7 @@ class ChatCommandPlugin:
 	def command_handle(self, player_name, command, args):
 		if command == '':
 			return
-		print("Command:", player_name, command, args)
-		if command == 'jump' or command == 'j':
-			self.physics.jump()
-		elif command == 'speak':
-			self.net.push_packet('PLAY>Chat Message', {'message': player_name + ' ' + ' '.join(args)})
-		elif command == 'date':
-			self.net.push_packet('PLAY>Chat Message', {'message': 'Current Date: ' + str(datetime.datetime.now())})
-		elif command == 'cmd':
-			self.net.push_packet('PLAY>Chat Message', {'message': '/' + ' '.join(args)})
-		elif command == 'slot':
-			if len(args) == 1 and (int(args[0]) >= 0 and int(args[0]) <= 8):
-				self.net.push_packet('PLAY>Held Item Change', {'slot': int(args[0])})
-		elif command == 'place':
-			#cur_pos_# 0-16
-			# we can send held item of -1 and it will work might not be as clean but he still places the object because server side inventories
-			block_data = {'location': {'x': int(args[0]),'y': int(args[1]),'z': int(args[2])}, 'direction':1, 'held_item': {'id': -1}, 'cur_pos_x': 8, 'cur_pos_y': 16, 'cur_pos_z': 8}
-			print(block_data)
-			self.net.push_packet('PLAY>Player Block Placement', block_data)	
-		elif command == 'inv':
-			self.inventory.test_inventory()
-		elif command == 'animation':
-			self.net.push_packet('PLAY>Animation', '')
+		self.event.emit('cmd_' + command, {name:player_name, args:args})
 
 	def parse_chat(self, chat_data):
 		message = ''
@@ -84,6 +57,5 @@ class ChatCommandPlugin:
 				if type(text) is dict:
 					message += self.parse_chat(text)
 				elif type(text) is string_types:
-					message += ' ' + text
-					
+					message += ' ' + text		
 		return message
