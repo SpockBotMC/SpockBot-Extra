@@ -1,6 +1,6 @@
 """
 Handful of useful commands
-ReadLine or ChatCommand need to be loaded for this plugin to do anything
+CursesCommand or ChatCommand need to be loaded for this plugin to do anything
 """
 __author__ = "Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
