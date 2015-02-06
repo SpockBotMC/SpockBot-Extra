@@ -5,19 +5,28 @@ __author__ = "Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
-import time,readline,thread,sys
+import time,readline,sys,os
+try:
+	import thread
+except ImportError:
+	import _thread as thread
 
-class CustomPrint(object):
+class ReadlinePrint(object):
 	def __init__(self):
-		self.out=sys.stdout
+		self.oldout = sys.stdout
+		self.flush = sys.stdout.flush
+		self.errors = sys.stdout.errors
+		self.encoding = sys.stdout.encoding
 
 	def write(self, text):
-		self.out.write('\r'+' '*(len(readline.get_line_buffer())+2)+'\r')
-		self.out.write(text)
-		self.out.write('> ' + readline.get_line_buffer())
-		self.out.flush()
+		if text.rstrip(os.linesep) == '':
+			return
+		self.oldout.write('\r'+' '*(len(readline.get_line_buffer())+2)+'\r')
+		self.oldout.write(text + "\n")
+		self.oldout.write("> " + readline.get_line_buffer())
+		self.oldout.flush()
 
-sys.stdout = CustomPrint()
+sys.stdout = ReadlinePrint()
 
 class ReadLinePlugin:
 	def __init__(self, ploader, settings):
@@ -26,4 +35,4 @@ class ReadLinePlugin:
 
 	def readthread(self):
 		while True:
-			s = input('> ')
+			s = raw_input('> ')
