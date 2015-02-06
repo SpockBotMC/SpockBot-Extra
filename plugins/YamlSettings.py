@@ -1,3 +1,14 @@
+"""
+A more advanced settings mixin that can parse yaml files and obeys setting
+heirarchies. Janky enough that I don't feel comfortable putting it in SpockBot
+proper, if a project wants that they can build their own settings parser around
+the generic SpockBot settings manager.
+"""
+
+__author__ = "Nick Gamberini"
+__copyright__ = "Copyright 2015, The SpockBot Project"
+__license__ = "MIT"
+
 #requires PyYAML
 import yaml
 from spock.utils import get_settings
