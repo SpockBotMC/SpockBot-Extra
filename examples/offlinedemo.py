@@ -12,7 +12,7 @@ start_settings = {
 }
 
 plugins = DefaultPlugins
-plugins.append(DemoPlugin)
-client = Client(plugins = plugins, settings = start_settings)
+plugins.append(('demo', DemoPlugin))
+client = Client(plugins = plugins, start = start_settings)
 #client.start() with no arguments will automatically connect to localhost
 client.start('localhost', 25565)

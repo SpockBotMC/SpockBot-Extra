@@ -129,7 +129,6 @@ class CursesHandler(logging.Handler):
 		def __init__(self, screen):
 			logging.Handler.__init__(self)
 			self.screen = screen
-			self.level = logging.INFO
 		def emit(self, record):
 			msg = self.format(record)
 			self.screen.addLine(msg)

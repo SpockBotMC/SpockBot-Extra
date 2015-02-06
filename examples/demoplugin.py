@@ -2,6 +2,9 @@
 Sample plugin
 """
 
+import logging
+logger = logging.getLogger('spock')
+
 #TODO: Make this cooler
 class DemoPlugin:
 	def __init__(self, ploader, settings):
@@ -22,4 +25,4 @@ class DemoPlugin:
 		)
 
 	def print_packets(self, name, packet):
-		print(packet)
+		logger.info(str(packet))
