@@ -38,9 +38,10 @@ class ChatCommandPlugin:
 			pass
 
 	def command_handle(self, player_name, command, args):
+		print("Command:", command)
 		if command == '':
 			return
-		self.event.emit('cmd_' + command, {name:player_name, args:args})
+		self.event.emit('cmd_' + command, {'name':player_name, 'args':args})
 
 	def parse_chat(self, chat_data):
 		message = ''

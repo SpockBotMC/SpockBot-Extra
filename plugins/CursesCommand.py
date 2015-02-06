@@ -28,7 +28,7 @@ class ReadlinePrint(object):
 
 sys.stdout = ReadlinePrint()
 
-class ReadLinePlugin:
+class CursesCommandPlugin:
 	def __init__(self, ploader, settings):
 		self.event = ploader.requires('Event')
 		thread.start_new_thread(self.readthread, ())
