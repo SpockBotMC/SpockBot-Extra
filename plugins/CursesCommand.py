@@ -1,5 +1,5 @@
 """
-Curses console for sending commands local and remote
+Curses console for sending commands local and remote in the format `l command args` or `r command args`
 """
 __author__ = "Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
