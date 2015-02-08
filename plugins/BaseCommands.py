@@ -32,7 +32,7 @@ class BaseCommandsPlugin:
 		self.net.push_packet('PLAY>Chat Message', {'message': 'Current Date: ' + str(datetime.datetime.now())})
 
 	def handle_command(self, event, data):
-		self.net.push_packet('PLAY>Chat Message', {'message': '/' + ' '.join(args)})
+		self.net.push_packet('PLAY>Chat Message', {'message': '/' + ' '.join(data['args'])})
 
 	def handle_slot(self, event, data):
 		args = data['args']
