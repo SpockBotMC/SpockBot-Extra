@@ -38,7 +38,7 @@ class ChatCommandPlugin:
 			pass
 
 	def command_handle(self, player_name, command, args):
-		logger.info("Command: %s", command)
+		logger.info("Command: %s Args: %s", command, args)
 		if command == '':
 			return
 		self.event.emit('cmd_' + command, {'name':player_name, 'args':args})

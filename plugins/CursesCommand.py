@@ -158,7 +158,7 @@ class CommandProcessor:
 		if len(msg) > 2:
 			args = msg[2:]
 		if loc == 'l':
-			logger.info("Command: %s", command)
+			logger.info("Command: %s Args: %s", command, args)
 			self.event.emit('cmd_'+command, {'args': args})
 		elif loc == 'r':
 			self.net.push_packet('PLAY>Chat Message', {'message': command + ' ' + ' '.join(args)})
