@@ -5,22 +5,19 @@ __author__ = "Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
-from spock.utils import string_types
-
 import logging
 logger = logging.getLogger('spock')
 
 class ChatCommandPlugin:
 	def __init__(self, ploader, settings):
 		self.event = ploader.requires('Event')
-		ploader.reg_event_handler(
-			'PLAY<Chat Message', self.handle_chat_message
-		)
+		if not ploader.requires('Chat'):
+			logger.error("ChatCommandPlugin requires Chat, bailing out")
+			return
+		ploader.reg_event_handler('chat_message', self.handle_chat_message)
 
-	def handle_chat_message(self, name, packet):
-		chat_data = packet.data['json_data']
-		message = self.parse_chat(chat_data)
-		logger.info('Chat: %s', message)
+	def handle_chat_message(self, event, data):
+		message = data['message']
 		try:
 			name_pos = message.find(' ')
 			if name_pos == -1:
@@ -41,25 +38,7 @@ class ChatCommandPlugin:
 			pass
 
 	def command_handle(self, player_name, command, args):
-		logger.info("Command: %s", command)
+		logger.info("Command: %s Args: %s", command, args)
 		if command == '':
 			return
 		self.event.emit('cmd_' + command, {'name':player_name, 'args':args})
-
-	def parse_chat(self, chat_data):
-		message = ''
-		if type(chat_data) is dict:
-			if 'text' in chat_data:
-				message += chat_data['text']
-				if 'extra' in chat_data:
-					message += self.parse_chat(chat_data['extra'])
-			elif 'translate' in chat_data:
-				if 'with' in chat_data:
-					message += self.parse_chat(chat_data['with'])
-		elif type(chat_data) is list:
-			for text in chat_data:
-				if type(text) is dict:
-					message += self.parse_chat(text)
-				elif type(text) is string_types:
-					message += ' ' + text		
-		return message
