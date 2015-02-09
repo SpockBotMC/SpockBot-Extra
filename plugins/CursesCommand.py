@@ -19,6 +19,7 @@ class Screen:
 		self.searchText = PROMPT
 		self.commands = []
 		self.commandindex = 0
+		self.cursorpos = len(self.searchText)
 		self.stdscr = stdscr
 		self.cmdprocessor = processor
 		self.ignorekeys = [curses.KEY_MOUSE]
@@ -72,7 +73,11 @@ class Screen:
 		self.stdscr.addstr(self.rows-2,0,text + ' ' * (self.cols-len(text)), 
 						   curses.color_pair(1))
 		# move cursor to input line
-		self.stdscr.move(self.rows-1, len(self.searchText))
+		self.stdscr.move(self.rows-1, self.cursorpos)
+
+	def setSearchText(self, text):
+		self.searchText = text
+		self.cursorpos = len(self.searchText)
 
 	def doRead(self):
 		""" Input is ready! """
@@ -83,38 +88,50 @@ class Screen:
 			pass
 
 		if c == curses.KEY_BACKSPACE:
-			if len(self.searchText) > 2:
-				self.searchText = self.searchText[:-1]
+			if len(self.searchText) > len(PROMPT):
+				if self.cursorpos == len(self.searchText):
+					self.setSearchText(self.searchText[:-1])
+				elif self.cursorpos < len(self.searchText):
+					self.searchText = self.searchText[:self.cursorpos-1] + self.searchText[self.cursorpos:]
+					self.cursorpos-=1
+
 		elif c == curses.KEY_ENTER or c == 10:
 			self.cmdprocessor.process_command(self.searchText[2:])
 			self.commands.append(self.searchText[2:])
 			self.commandindex = len(self.commands)
 			self.stdscr.refresh()
-			self.searchText = PROMPT
+			self.setSearchText(PROMPT)
 		elif c == curses.KEY_UP:
 			if self.commandindex-1 >= 0:
 				self.commandindex -= 1
-				self.searchText = PROMPT + self.commands[self.commandindex]
+				self.setSearchText(PROMPT + self.commands[self.commandindex])
 		elif c == curses.KEY_DOWN:
 			if self.commandindex+1 < len(self.commands):
 				self.commandindex += 1
-				self.searchText = PROMPT + self.commands[self.commandindex]
+				self.setSearchText(PROMPT + self.commands[self.commandindex])
 		elif c == curses.KEY_LEFT:
-			pass
+			self.cursorpos -= 1
+			if self.cursorpos < len(PROMPT):
+				self.cursorpos = len(PROMPT)
 		elif c == curses.KEY_RIGHT:
-			pass
-
+			self.cursorpos += 1
+			if self.cursorpos > len(self.searchText):
+				self.cursorpos = len(self.searchText)
 		else:
 			if len(self.searchText) == self.cols-2: return
 			try:
-				self.searchText = self.searchText + chr(c)
+				if self.cursorpos == len(self.searchText):
+					self.setSearchText(self.searchText + chr(c))
+				elif self.cursorpos < len(self.searchText):
+					self.searchText = self.searchText[:self.cursorpos] + chr(c) + self.searchText[self.cursorpos:]
+					self.cursorpos+=1
 			except:
 				pass
 
 		self.stdscr.addstr(self.rows-1, 0, 
 						   self.searchText + (' ' * (
 						   self.cols-len(self.searchText)-2)))
-		self.stdscr.move(self.rows-1, len(self.searchText))
+		self.stdscr.move(self.rows-1, self.cursorpos)
 		self.paintStatus(self.statusText)
 		self.stdscr.refresh()
 
