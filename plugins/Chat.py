@@ -14,7 +14,7 @@ logger = logging.getLogger('spock')
 class ChatPlugin:
 	def __init__(self, ploader, settings):
 		self.event = ploader.requires('Event')
-		#there has to be a better way to make dependencies 
+		#TODO: there has to be a better way to make dependencies 
 		ploader.provides('Chat', True)
 		ploader.reg_event_handler(
 			'PLAY<Chat Message', self.handle_chat_message
