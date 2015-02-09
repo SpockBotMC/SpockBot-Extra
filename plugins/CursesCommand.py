@@ -10,19 +10,24 @@ import curses,os,sys
 import logging
 logger = logging.getLogger('spock')
 
+PROMPT = '> '
+
 class Screen:
 	def __init__(self, stdscr, processor):
 		self.timer = 0
 		self.statusText = "SpockBot"
-		self.searchText = '> '
+		self.searchText = PROMPT
+		self.commands = []
+		self.commandindex = 0
 		self.stdscr = stdscr
 		self.cmdprocessor = processor
+		self.ignorekeys = [curses.KEY_MOUSE]
 
 		# set screen attributes
 		self.stdscr.nodelay(1) # this is used to make input calls non-blocking
 		curses.cbreak()
 		self.stdscr.keypad(1)
-		curses.curs_set(0)     # no annoying mouse cursor
+		curses.curs_set(1)     # no annoying mouse cursor
 
 		self.rows, self.cols = self.stdscr.getmaxyx()
 		self.lines = []
@@ -67,22 +72,37 @@ class Screen:
 		self.stdscr.addstr(self.rows-2,0,text + ' ' * (self.cols-len(text)), 
 						   curses.color_pair(1))
 		# move cursor to input line
-		self.stdscr.move(self.rows-1, self.cols-1)
+		self.stdscr.move(self.rows-1, len(self.searchText))
 
 	def doRead(self):
 		""" Input is ready! """
 		curses.noecho()
 		self.timer = self.timer + 1
 		c = self.stdscr.getch() # read a character
+		if c in self.ignorekeys:
+			pass
 
 		if c == curses.KEY_BACKSPACE:
 			if len(self.searchText) > 2:
 				self.searchText = self.searchText[:-1]
-
 		elif c == curses.KEY_ENTER or c == 10:
 			self.cmdprocessor.process_command(self.searchText[2:])
+			self.commands.append(self.searchText[2:])
+			self.commandindex = len(self.commands)
 			self.stdscr.refresh()
-			self.searchText = '> '
+			self.searchText = PROMPT
+		elif c == curses.KEY_UP:
+			if self.commandindex-1 >= 0:
+				self.commandindex -= 1
+				self.searchText = PROMPT + self.commands[self.commandindex]
+		elif c == curses.KEY_DOWN:
+			if self.commandindex+1 < len(self.commands):
+				self.commandindex += 1
+				self.searchText = PROMPT + self.commands[self.commandindex]
+		elif c == curses.KEY_LEFT:
+			pass
+		elif c == curses.KEY_RIGHT:
+			pass
 
 		else:
 			if len(self.searchText) == self.cols-2: return
