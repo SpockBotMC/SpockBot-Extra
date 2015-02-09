@@ -112,14 +112,16 @@ class CommandProcessor:
 	
 	def process_command(self, line):
 		msg = line.split(' ')
-		if len(msg) < 3:
+		if len(msg) < 2:
 			logger.info("Command: Not enough arguments")
 			return
 		loc = msg[0]
 		command = msg[1]
-		args = msg[2:]
-		logger.info("Command: %s", command)
+		args = []
+		if len(msg) > 2:
+			args = msg[2:]
 		if loc == 'l':
+			logger.info("Command: %s", command)
 			self.event.emit('cmd_'+command, {'args': args})
 		elif loc == 'r':
 			self.net.push_packet('PLAY>Chat Message', {'message': command + ' ' + ' '.join(args)})
@@ -145,9 +147,6 @@ class CursesCommandPlugin:
 
 		ploader.reg_event_handler('event_tick', self.tick)
 		ploader.reg_event_handler('kill', self.kill)
-
-	def tmp(self, *args, **kargs):
-		self.screen.addLine(' '.join(args))
 
 	def tick(self, event, data):
 		self.screen.doRead()
