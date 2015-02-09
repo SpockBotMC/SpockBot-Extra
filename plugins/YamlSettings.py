@@ -11,7 +11,7 @@ __license__ = "MIT"
 
 #requires PyYAML
 import yaml
-from spock.utils import get_settings
+from spock.utils import get_settings, pl_announce
 from spock.plugins.core.settings import PloaderFetch
 
 @pl_announce('PloaderFetch')
