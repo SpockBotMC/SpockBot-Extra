@@ -176,6 +176,7 @@ class CursesCommandPlugin:
 	def __init__(self, ploader, settings):
 		self.event = ploader.requires('Event')
 		self.net = ploader.requires('Net')
+		self.clinfo = ploader.requires('ClientInfo')
 		stdscr = curses.initscr() # initialize curses
 		cmd = CommandProcessor(self.event, self.net)
 		self.screen = Screen(stdscr,cmd)   # create Screen object
@@ -191,6 +192,10 @@ class CursesCommandPlugin:
 		self.set_uncaught_exc_handler()
 
 	def tick(self, event, data):
+		c = self.clinfo
+		gamemode = "Creative" if c.game_info.gamemode == 1 else "Survival"
+		pos = "(%s, %s, %s)" % (c.position.x, c.position.y, c.position.z)
+		self.screen.statusText = "%s Mode:%s Pos:%s Health:%s Food:%s" % (c.name, gamemode, pos, c.health.health, c.health.food)
 		self.screen.doRead()
 
 	def kill(self, event, data):
