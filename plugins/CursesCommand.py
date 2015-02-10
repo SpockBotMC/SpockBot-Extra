@@ -5,7 +5,7 @@ __author__ = "Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
-import curses,os,sys
+import curses,os,sys,traceback
 
 import logging
 logger = logging.getLogger('spock')
@@ -184,9 +184,22 @@ class CursesCommandPlugin:
 
 		ploader.reg_event_handler('event_tick', self.tick)
 		ploader.reg_event_handler('kill', self.kill)
+		self.set_uncaught_exc_handler()
 
 	def tick(self, event, data):
 		self.screen.doRead()
 
 	def kill(self, event, data):
 		self.screen.close()
+
+	# try exiting curses and restore console before printing stack and crashing
+	def set_uncaught_exc_handler(self):
+		""" Call this function to setup the `sys.excepthook` to exit curses and
+		restore the terminal before printing the exception stack trace. This way
+		your application does not mess up the users terminal if it crashes. (And
+		you can use assertions for debugging, etc...)"""
+		def handle(type, value, tb):
+			try: self.screen.close()
+			except Exception: pass
+			print_exc()
+		sys.excepthook = handle
