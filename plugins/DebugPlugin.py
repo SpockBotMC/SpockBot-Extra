@@ -19,6 +19,7 @@ class DebugPlugin:
 		#	ploader.reg_event_handler(packet, self.debug)
 		self.physics = ploader.requires('Physics')
 		self.timers = ploader.requires('Timers')
+		ploader.requires('fake_plugin', True, "Debug requirement")
 		ploader.reg_event_handler('w_block_update', self.block_test)
 		#ploader.reg_event_handler('client_tick', self.timer_test)
 		ploader.reg_event_handler('cl_health_update', self.clinfo_test)
