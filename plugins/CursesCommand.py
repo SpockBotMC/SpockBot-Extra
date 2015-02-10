@@ -198,8 +198,8 @@ class CursesCommandPlugin:
 		restore the terminal before printing the exception stack trace. This way
 		your application does not mess up the users terminal if it crashes. (And
 		you can use assertions for debugging, etc...)"""
-		def handle(type, value, tb):
+		def handle(exec_type, exec_value, exec_traceback):
 			try: self.screen.close()
 			except Exception: pass
-			print_exc()
+			sys.__excepthook__(exec_type, exec_value, exec_traceback)
 		sys.excepthook = handle
