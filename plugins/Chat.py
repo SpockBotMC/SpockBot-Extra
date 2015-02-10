@@ -5,17 +5,15 @@ __author__ = "Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
-from spock.utils import pl_announce,string_types
+from spock.utils import pl_event,string_types
 
 import logging
 logger = logging.getLogger('spock')
 
-@pl_announce('Chat')
+@pl_event('Chat')
 class ChatPlugin:
 	def __init__(self, ploader, settings):
 		self.event = ploader.requires('Event')
-		#TODO: there has to be a better way to make dependencies 
-		ploader.provides('Chat', True)
 		ploader.reg_event_handler(
 			'PLAY<Chat Message', self.handle_chat_message
 		)
@@ -23,7 +21,8 @@ class ChatPlugin:
 	def handle_chat_message(self, name, packet):
 		chat_data = packet.data['json_data']
 		message = self.parse_chat(chat_data)
-		logger.info('Chat: %s', message)
+		if message != "":
+			logger.info('Chat: %s', message)
 		self.event.emit('chat_message', {'message': message, 'data':chat_data})
 
 	def parse_chat(self, chat_data):

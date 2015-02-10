@@ -11,9 +11,7 @@ logger = logging.getLogger('spock')
 class ChatCommandPlugin:
 	def __init__(self, ploader, settings):
 		self.event = ploader.requires('Event')
-		if not ploader.requires('Chat'):
-			logger.error("ChatCommandPlugin requires Chat, bailing out")
-			return
+		ploader.requires('Chat')
 		ploader.reg_event_handler('chat_message', self.handle_chat_message)
 
 	def handle_chat_message(self, event, data):

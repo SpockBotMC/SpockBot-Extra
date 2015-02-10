@@ -180,7 +180,11 @@ class CursesCommandPlugin:
 		cmd = CommandProcessor(self.event, self.net)
 		self.screen = Screen(stdscr,cmd)   # create Screen object
 		stdscr.refresh()
-		logger.addHandler(CursesHandler(self.screen))
+		cursesHandler = CursesHandler(self.screen)
+		formatter = logging.Formatter('[%(levelname)s]: %(message)s')
+		cursesHandler.setFormatter(formatter)
+		logger.addHandler(cursesHandler)
+
 
 		ploader.reg_event_handler('event_tick', self.tick)
 		ploader.reg_event_handler('kill', self.kill)
