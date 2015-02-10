@@ -11,7 +11,9 @@ class AntiAFKPlugin:
 	def __init__(self, ploader, settings):
 		self.net = ploader.requires('Net')
 		self.timers = ploader.requires('Timers')
-		self.timers.reg_event_timer(AFK_TIME, self.avoid_afk)
+		self.physics = ploader.requires('Physics')
+		self.timers.reg_event_timer(AFK_TIME*60, self.avoid_afk)
 
 	def avoid_afk(self):
+		self.physics.jump()
 		self.net.push_packet('PLAY>Animation', '')

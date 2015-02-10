@@ -87,7 +87,7 @@ class Screen:
 		if c in self.ignorekeys:
 			pass
 
-		elif c == curses.KEY_BACKSPACE:
+		elif c == curses.KEY_BACKSPACE or c == 127:
 			if len(self.searchText) > len(PROMPT):
 				if self.cursorpos == len(self.searchText):
 					self.setSearchText(self.searchText[:-1])
