@@ -6,6 +6,9 @@ __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
 import curses,os,sys,traceback
+from spock.mcp.mcdata import (
+	GM_SURVIVAL, GM_CREATIVE, GM_ADVENTURE, GM_SPECTATOR
+)
 
 import logging
 logger = logging.getLogger('spock')
@@ -69,7 +72,7 @@ class Screen:
 		self.stdscr.refresh()
 
 	def paintStatus(self, text):
-		if len(text) > self.cols: raise TextTooLongError
+		if len(text) > self.cols: text = text[self.cols:]
 		self.stdscr.addstr(self.rows-2,0,text + ' ' * (self.cols-len(text)), 
 						   curses.color_pair(1))
 		# move cursor to input line
@@ -193,7 +196,16 @@ class CursesCommandPlugin:
 
 	def tick(self, event, data):
 		c = self.clinfo
-		gamemode = "Creative" if c.game_info.gamemode == 1 else "Survival"
+		gamemode = ""
+		gm = c.game_info.gamemode
+		if gm == GM_CREATIVE:
+			gamemode = "Creative"
+		elif gm == GM_SURVIVAL:
+			gamemode = "Survival"
+		elif gm == GM_ADVENTURE:
+			gamemode = "Adventure"
+		elif gm == GM_SPECTATOR:
+			gamemode = "Spectator"
 		pos = "(%s, %s, %s)" % (c.position.x, c.position.y, c.position.z)
 		self.screen.statusText = "%s Mode:%s Pos:%s Health:%s Food:%s" % (c.name, gamemode, pos, c.health.health, c.health.food)
 		self.screen.doRead()
