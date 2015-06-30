@@ -206,7 +206,7 @@ class CursesCommandPlugin:
 			gamemode = "Adventure"
 		elif gm == GM_SPECTATOR:
 			gamemode = "Spectator"
-		pos = "(%s, %s, %s)" % (c.position.x, c.position.y, c.position.z)
+		pos = "({:.2f}, {:.2f}, {:.2f})".format(c.position.x, c.position.y, c.position.z)
 		self.screen.statusText = "%s Mode:%s Pos:%s Health:%s Food:%s" % (c.name, gamemode, pos, c.health.health, c.health.food)
 		self.screen.doRead()
 
