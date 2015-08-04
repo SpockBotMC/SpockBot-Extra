@@ -1,4 +1,4 @@
-SpockBot-Contrib
+SpockBot-Extra
 =====
 
 A repo for useful plugins that do not belong in the base spock package.
