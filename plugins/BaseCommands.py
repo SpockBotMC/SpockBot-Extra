@@ -14,7 +14,7 @@ class BaseCommandsPlugin:
         self.physics = ploader.requires('Physics')
 
         ploader.reg_event_handler('cmd_jump', self.handle_jump)
-        ploader.reg_event_handler('cmd_speak', self.handle_speak)
+        ploader.reg_event_handler('cmd_say', self.handle_say)
         ploader.reg_event_handler('cmd_date', self.handle_date)
         ploader.reg_event_handler('cmd_command', self.handle_command)
         ploader.reg_event_handler('cmd_slot', self.handle_slot)
@@ -25,7 +25,7 @@ class BaseCommandsPlugin:
     def handle_jump(self, event, data):
         self.physics.jump()
 
-    def handle_speak(self, event, data):
+    def handle_say(self, event, data):
         self.net.push_packet('PLAY>Chat Message', {'message': ' '.join(data['args'])})
 
     def handle_date(self, event, data):
@@ -42,7 +42,7 @@ class BaseCommandsPlugin:
     def handle_place(self, event, data):
         args = data['args']
         block_data = {'location': {'x': int(args[0]),'y': int(args[1]),'z': int(args[2])}, 'direction':1, 'held_item': {'id': -1}, 'cur_pos_x': 8, 'cur_pos_y': 16, 'cur_pos_z': 8}
-        self.net.push_packet('PLAY>Player Block Placement', block_data)	
+        self.net.push_packet('PLAY>Player Block Placement', block_data)
 
     def handle_break(self, event, data):
         args = data['args']

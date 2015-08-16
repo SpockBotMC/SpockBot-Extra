@@ -1,5 +1,5 @@
 """
-Curses console for sending commands local and remote in the format `l command args` or `r command args`
+Curses console for sending commands local and remote in the format `command args` or `/command args`
 """
 __author__ = "Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
@@ -54,7 +54,7 @@ class Screen:
         self.redisplayLines()
 
     def redisplayLines(self):
-        """ method for redisplaying lines 
+        """ method for redisplaying lines
             based on internal list of lines """
 
         self.stdscr.clear()
@@ -63,7 +63,7 @@ class Screen:
             i = 0
             index = len(self.lines) - 1
             while i < (self.rows - 3) and index >= 0:
-                self.stdscr.addstr(self.rows - 3 - i, 0, self.lines[index], 
+                self.stdscr.addstr(self.rows - 3 - i, 0, self.lines[index],
                                    curses.color_pair(2))
                 i = i + 1
                 index = index - 1
@@ -73,7 +73,7 @@ class Screen:
 
     def paintStatus(self, text):
         if len(text) > self.cols: text = text[self.cols:]
-        self.stdscr.addstr(self.rows-2,0,text + ' ' * (self.cols-len(text)), 
+        self.stdscr.addstr(self.rows-2,0,text + ' ' * (self.cols-len(text)),
                            curses.color_pair(1))
         # move cursor to input line
         self.stdscr.move(self.rows-1, self.cursorpos)
@@ -131,7 +131,7 @@ class Screen:
             except:
                 pass
 
-        self.stdscr.addstr(self.rows-1, 0, 
+        self.stdscr.addstr(self.rows-1, 0,
                            self.searchText + (' ' * (
                            self.cols-len(self.searchText)-2)))
         self.stdscr.move(self.rows-1, self.cursorpos)
@@ -149,22 +149,16 @@ class CommandProcessor:
     def __init__(self, event, net):
         self.event = event
         self.net = net
-    
+
     def process_command(self, line):
-        msg = line.split(' ')
-        if len(msg) < 2:
-            logger.info("Command: Not enough arguments")
-            return
-        loc = msg[0]
-        command = msg[1]
-        args = []
-        if len(msg) > 2:
-            args = msg[2:]
-        if loc == 'l':
+        if line[0] == '/':
+            self.net.push_packet('PLAY>Chat Message', {'message': line})
+        else:
+            msg = line.split(' ')
+            command = msg[0]
+            args = msg[1:]
             logger.info("Command: %s Args: %s", command, args)
             self.event.emit('cmd_'+command, {'args': args})
-        elif loc == 'r':
-            self.net.push_packet('PLAY>Chat Message', {'message': command + ' ' + ' '.join(args)})
 
 
 class CursesHandler(logging.Handler):
