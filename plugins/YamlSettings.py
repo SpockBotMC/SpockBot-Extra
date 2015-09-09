@@ -9,10 +9,12 @@ __author__ = "Nick Gamberini"
 __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
-#requires PyYAML
-import yaml
-from spock.utils import get_settings, pl_announce
 from spock.plugins.core.settings import PloaderFetch
+from spock.utils import get_settings, pl_announce
+
+# requires PyYAML
+import yaml
+
 
 @pl_announce('PloaderFetch')
 class YamlSettings:
@@ -39,7 +41,8 @@ class YamlSettings:
         for plugin in self.plugin_list:
             plugins.append(plugin[1])
             plugin_settings[plugin[1]] = temp_set[plugin[0]]
-        ploader.provides('PloaderFetch', PloaderFetch(plugins, plugin_settings))
+        ploader.provides('PloaderFetch',
+                         PloaderFetch(plugins, plugin_settings))
 
     def _import_yaml(self, path, obj):
         temp_set = {}
@@ -68,4 +71,4 @@ class YamlSettings:
 
 if __name__ == '__main__':
     from spock import Client
-    Client(settings_mixin = YamlSettings, file_path = 'config.yaml').start()
+    Client(settings_mixin=YamlSettings, file_path='config.yaml').start()

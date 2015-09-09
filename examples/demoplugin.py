@@ -3,26 +3,22 @@ Sample plugin
 """
 
 import logging
+
+from spock.plugins.base import PluginBase
+
 logger = logging.getLogger('spock')
 
-#TODO: Make this cooler
-class DemoPlugin:
+
+class DemoPlugin(PluginBase):
+    events = {
+        'LOGIN<Login Success': 'print_packets',
+        'PLAY<Chat Message': 'print_packets',
+        'PLAY<Player List Item': 'print_packets'
+    }
+
     def __init__(self, ploader, settings):
-        #Login Success
-        ploader.reg_event_handler(
-            "LOGIN<Login Success",
-            self.print_packets
-        )
-        #Chat Message
-        ploader.reg_event_handler(
-            "PLAY<Chat Message", 
-            self.print_packets
-        )
-        #Player List Item
-        ploader.reg_event_handler(
-            "PLAY<Player List Item",
-            self.print_packets
-        )
+        # Used to init the PluginBase
+        super(DemoPlugin, self).__init__(ploader, settings)
 
     def print_packets(self, name, packet):
-        logger.info(str(packet))
+        logger.info(name, str(packet))

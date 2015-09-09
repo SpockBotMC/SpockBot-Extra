@@ -5,19 +5,23 @@ __author__ = "Nick Gamberini, Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
-from spock.mcp import mcpacket, mcdata
+from spock.mcp import mcdata, mcpacket
+from spock.plugins.base import PluginBase
 
-class ReConnectPlugin:
+
+class ReConnectPlugin(PluginBase):
+    requires = ('Net', 'Auth', 'Timers')
+    events = {
+        'connect': 'connect',
+        'disconnect': 'reconnect_event',
+    }
+
     def __init__(self, ploader, settings):
+        super(ReConnectPlugin, self).__init__(ploader, settings)
         self.reconnecting = False
         self.host = None
         self.port = None
-        ploader.reg_event_handler('connect', self.connect)
-        ploader.reg_event_handler('disconnect', self.reconnect_event)
-        self.net = ploader.requires('Net')
-        self.timers = ploader.requires('Timers')
-        self.auth = ploader.requires('Auth')
-    
+
     def connect(self, event, data):
         self.host = data[0]
         self.port = data[1]
@@ -29,8 +33,8 @@ class ReConnectPlugin:
     def reconnect(self):
         self.net.connect(self.host, self.port)
         self.net.push(mcpacket.Packet(
-            ident = (mcdata.HANDSHAKE_STATE, mcdata.CLIENT_TO_SERVER, 0x00),
-            data = {
+            ident=(mcdata.HANDSHAKE_STATE, mcdata.CLIENT_TO_SERVER, 0x00),
+            data={
                 'protocol_version': mcdata.MC_PROTOCOL_VERSION,
                 'host': self.net.host,
                 'port': self.net.port,
@@ -39,6 +43,6 @@ class ReConnectPlugin:
         ))
 
         self.net.push(mcpacket.Packet(
-            ident = (mcdata.LOGIN_STATE, mcdata.CLIENT_TO_SERVER, 0x00),
-            data = {'name': self.auth.username},
+            ident=(mcdata.LOGIN_STATE, mcdata.CLIENT_TO_SERVER, 0x00),
+            data={'name': self.auth.username},
         ))

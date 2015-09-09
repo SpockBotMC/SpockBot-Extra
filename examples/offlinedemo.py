@@ -2,9 +2,10 @@
 Offline connection demo
 """
 
-from spock import Client
-from spock.plugins import DefaultPlugins
 from demoplugin import DemoPlugin
+
+from spock import Client
+from spock.plugins import default_plugins
 
 settings = {
     'start': {
@@ -15,8 +16,8 @@ settings = {
     },
 }
 
-plugins = DefaultPlugins
+plugins = default_plugins
 plugins.append(('demo', DemoPlugin))
-client = Client(plugins = plugins, settings = settings)
-#client.start() with no arguments will automatically connect to localhost
+client = Client(plugins=plugins, settings=settings)
+# client.start() with no arguments will automatically connect to localhost
 client.start('localhost', 25565)

@@ -8,48 +8,55 @@ __license__ = "MIT"
 
 import datetime
 
-class BaseCommandsPlugin:
-    def __init__(self, ploader, settings):
-        self.net = ploader.requires('Net')
-        self.physics = ploader.requires('Physics')
+from spock.plugins.base import PluginBase
+from spock.vector import Vector3
 
-        ploader.reg_event_handler('cmd_jump', self.handle_jump)
-        ploader.reg_event_handler('cmd_say', self.handle_say)
-        ploader.reg_event_handler('cmd_date', self.handle_date)
-        ploader.reg_event_handler('cmd_command', self.handle_command)
-        ploader.reg_event_handler('cmd_slot', self.handle_slot)
-        ploader.reg_event_handler('cmd_place', self.handle_place)
-        ploader.reg_event_handler('cmd_break', self.handle_break)
-        ploader.reg_event_handler('cmd_animation', self.handle_animation)
+
+class BaseCommandsPlugin(PluginBase):
+    requires = ('Net', 'Physics', 'Interact', 'Inventory')
+    events = {
+        'cmd_jump': 'handle_jump',
+        'cmd_say': 'handle_say',
+        'cmd_date': 'handle_date',
+        'cmd_command': 'handle_command',
+        'cmd_hold': 'handle_hold',
+        'cmd_place': 'handle_place',
+        'cmd_break': 'handle_break',
+    }
+
+    def __init__(self, ploader, settings):
+        super(BaseCommandsPlugin, self).__init__(ploader, settings)
 
     def handle_jump(self, event, data):
         self.physics.jump()
 
     def handle_say(self, event, data):
-        self.net.push_packet('PLAY>Chat Message', {'message': ' '.join(data['args'])})
+        self.interact.chat(' '.join(data['args']))
 
     def handle_date(self, event, data):
-        self.net.push_packet('PLAY>Chat Message', {'message': 'Current Date: ' + str(datetime.datetime.now())})
+        self.net.push_packet('PLAY>Chat Message',
+                             {'message': 'Current Date: ' +
+                              str(datetime.datetime.now())})
 
     def handle_command(self, event, data):
-        self.net.push_packet('PLAY>Chat Message', {'message': '/' + ' '.join(data['args'])})
+        self.net.push_packet('PLAY>Chat Message',
+                             {'message': '/' + ' '.join(data['args'])})
 
-    def handle_slot(self, event, data):
+    def handle_hold(self, event, data):
         args = data['args']
-        if len(args) == 1 and (int(args[0]) >= 0 and int(args[0]) <= 8):
-                self.net.push_packet('PLAY>Held Item Change', {'slot': int(args[0])})
+        slot = self.inventory.find_slot(int(args[0]),
+                                        self.inventory.window.hotbar_slots)
+        if slot is not None:
+            self.inventory.select_active_slot(slot)
 
     def handle_place(self, event, data):
         args = data['args']
-        block_data = {'location': {'x': int(args[0]),'y': int(args[1]),'z': int(args[2])}, 'direction':1, 'held_item': {'id': -1}, 'cur_pos_x': 8, 'cur_pos_y': 16, 'cur_pos_z': 8}
-        self.net.push_packet('PLAY>Player Block Placement', block_data)
+        self.interact.place_block(Vector3(int(args[0]),
+                                          int(args[1]),
+                                          int(args[2])))
 
     def handle_break(self, event, data):
         args = data['args']
-        block_data = {'location': {'x': int(args[0]),'y': int(args[1]),'z': int(args[2])}, 'status':0, 'face': 1}
-        self.net.push_packet('PLAY>Player Digging', block_data)
-        block_data['status'] = 2
-        self.net.push_packet('PLAY>Player Digging', block_data)
-
-    def handle_animation(self, event, data):
-        self.net.push_packet('PLAY>Animation', '')
+        self.interact.dig_block(Vector3(int(args[0]),
+                                        int(args[1]),
+                                        int(args[2])))

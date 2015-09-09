@@ -5,25 +5,35 @@ __author__ = "Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
-from spock.utils import pl_event,string_types
-
 import logging
+
+from six import string_types
+
+from spock.plugins.base import PluginBase
+from spock.utils import pl_event
+
 logger = logging.getLogger('spock')
 
+
 @pl_event('Chat')
-class ChatPlugin:
+class ChatPlugin(PluginBase):
+    requires = 'Event'
+    events = {
+        'PLAY<Chat Message': 'handle_chat_message',
+    }
+
     def __init__(self, ploader, settings):
-        self.event = ploader.requires('Event')
-        ploader.reg_event_handler(
-            'PLAY<Chat Message', self.handle_chat_message
-        )
+        super(ChatPlugin, self).__init__(ploader, settings)
 
     def handle_chat_message(self, name, packet):
         chat_data = packet.data['json_data']
         message = self.parse_chat(chat_data)
         if message != "":
             logger.info('Chat: %s', message)
-        self.event.emit('chat_message', {'message': message, 'data':chat_data})
+            self.event.emit('chat_message',
+                            {'player': '', 'message': message,
+                             'data': chat_data,
+                             'position': packet.data['position']})
 
     def parse_chat(self, chat_data):
         message = ''
@@ -40,5 +50,5 @@ class ChatPlugin:
                 if type(text) is dict:
                     message += self.parse_chat(text)
                 elif type(text) is string_types:
-                    message += ' ' + text		
+                    message += ' ' + text
         return message
