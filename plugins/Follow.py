@@ -23,6 +23,7 @@ class FollowPlugin:
         ploader.reg_event_handler('cmd_tp', self.handle_tp)
         ploader.reg_event_handler('client_tick', self.client_tick)
         ploader.reg_event_handler('cmd_follow', self.handle_follow)
+        ploader.reg_event_handler('cmd_unfollow', self.handle_unfollow)
         ploader.reg_event_handler('PLAY<Spawn Player', self.handle_spawn_player)
         for e in ('PLAY<Entity Relative Move', 'PLAY<Entity Look And Relative Move','PLAY<Entity Teleport',):
             ploader.reg_event_handler(e, self.handle_on_entity_move)
@@ -39,15 +40,16 @@ class FollowPlugin:
 
     def handle_follow(self, event, data):
         args = data['args']
-        if args[0] == 'stop':
-            self.follow_ent = None
-        else:
-            for uuid, player in self.clinfo.player_list.items():
-                if args[0].lower() in player.name.lower():
-                    for ent_id, ent in self.entities.players.items():
-                        if ent.uuid == uuid:
-                            self.follow_ent = ent_id
-                            logger.debug("Following: %s", player.name)
+        for uuid, player in self.clinfo.player_list.items():
+            if args[0].lower() in player.name.lower():
+                for ent_id, ent in self.entities.players.items():
+                    if ent.uuid == uuid:
+                        self.follow_ent = ent_id
+                        logger.debug("Following: %s", player.name)
+
+    def handle_unfollow(self, event, data):
+        self.follow_ent = None
+        self.movement.move_location = None
 
     def handle_on_entity_move(self, name, packet):
         eid = packet.data['eid']
@@ -64,5 +66,6 @@ class FollowPlugin:
                 self.movement.move_to(round(ent.x), round(ent.y), round(ent.z))
             else:
                 self.follow_ent = None
+                self.movement.move_location = None
 
 
