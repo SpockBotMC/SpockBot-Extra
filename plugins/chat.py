@@ -49,6 +49,6 @@ class ChatPlugin(PluginBase):
             for text in chat_data:
                 if type(text) is dict:
                     message += self.parse_chat(text)
-                elif type(text) is string_types:
+                elif isinstance(text, string_types):
                     message += ' ' + text
         return message
