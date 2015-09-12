@@ -10,7 +10,7 @@ from spock.plugins import default_plugins
 
 # Bad but needed to import extra plugins from examples
 sys.path.insert(0, os.path.abspath('..'))
-from plugins.EchoPacket import EchoPacketPlugin
+from plugins.echo_packet import EchoPacketPlugin
 
 start_settings = {
     'username': 'your_username',
