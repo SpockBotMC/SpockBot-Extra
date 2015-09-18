@@ -22,6 +22,7 @@ class BaseCommandsPlugin(PluginBase):
         'cmd_hold': 'handle_hold',
         'cmd_place': 'handle_place',
         'cmd_break': 'handle_break',
+        'cmd_click': 'handle_click',
     }
 
     def __init__(self, ploader, settings):
@@ -52,6 +53,12 @@ class BaseCommandsPlugin(PluginBase):
     def handle_place(self, event, data):
         args = data['args']
         self.interact.place_block(Vector3(int(args[0]),
+                                          int(args[1]),
+                                          int(args[2])))
+
+    def handle_click(self, event, data):
+        args = data['args']
+        self.interact.click_block(Vector3(int(args[0]),
                                           int(args[1]),
                                           int(args[2])))
 
