@@ -18,7 +18,6 @@ logger = logging.getLogger('spock')
 class FollowPlugin(PluginBase):
     requires = ('ClientInfo', 'Entities', 'Movement', 'Interact')
     events = {
-        'cmd_tp': 'handle_tp',
         'client_tick': 'client_tick',
         'cmd_follow': 'handle_follow',
         'cmd_unfollow': 'handle_unfollow',

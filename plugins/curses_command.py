@@ -184,6 +184,7 @@ class CursesCommandPlugin(PluginBase):
     events = {
         'event_tick': 'tick',
         'kill': 'kill',
+        'chat': 'handle_chat',
     }
 
     def __init__(self, ploader, settings):
@@ -217,6 +218,9 @@ class CursesCommandPlugin(PluginBase):
 
     def kill(self, event, data):
         self.screen.close()
+
+    def handle_chat(self, event, data):
+        logger.info(data)
 
     # try exiting curses and restore console before printing stack and crashing
     def set_uncaught_exc_handler(self):
