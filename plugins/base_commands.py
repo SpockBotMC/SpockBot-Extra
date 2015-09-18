@@ -52,18 +52,12 @@ class BaseCommandsPlugin(PluginBase):
 
     def handle_place(self, event, data):
         args = data['args']
-        self.interact.place_block(Vector3(int(args[0]),
-                                          int(args[1]),
-                                          int(args[2])))
+        self.interact.place_block(Vector3(*map(int, args)))
 
     def handle_click(self, event, data):
         args = data['args']
-        self.interact.click_block(Vector3(int(args[0]),
-                                          int(args[1]),
-                                          int(args[2])))
+        self.interact.click_block(Vector3(*map(int, args)))
 
     def handle_break(self, event, data):
         args = data['args']
-        self.interact.dig_block(Vector3(int(args[0]),
-                                        int(args[1]),
-                                        int(args[2])))
+        self.interact.dig_block(Vector3(*map(int, args)))
