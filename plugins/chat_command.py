@@ -18,7 +18,7 @@ class ChatCommandPlugin(PluginBase):
         'prefix': '!',
     }
     events = {
-        'chat_text': 'handle_chat_message',
+        'chat': 'handle_chat_message',
     }
 
     def __init__(self, ploader, settings):

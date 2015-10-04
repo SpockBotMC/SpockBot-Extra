@@ -12,8 +12,8 @@ from spockbot.plugins.base import PluginBase
 class ReConnectPlugin(PluginBase):
     requires = ('Net', 'Auth', 'Timers')
     events = {
-        'connect': 'connect',
-        'disconnect': 'reconnect_event',
+        'net_connect': 'connect',
+        'net_disconnect': 'reconnect_event',
     }
 
     def __init__(self, ploader, settings):

@@ -183,7 +183,7 @@ class CursesCommandPlugin(PluginBase):
     requires = ('Event', 'Net', 'ClientInfo')
     events = {
         'event_tick': 'tick',
-        'kill': 'kill',
+        'event_kill': 'kill',
     }
 
     def __init__(self, ploader, settings):
