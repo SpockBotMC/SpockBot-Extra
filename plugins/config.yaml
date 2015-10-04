@@ -1,7 +1,7 @@
 plugins:
   default_plugins:
     - python
-    - spock.plugins
+    - spockbot.plugins
 
 net:
   bufsize: 4096

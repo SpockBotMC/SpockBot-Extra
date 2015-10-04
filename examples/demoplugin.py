@@ -4,9 +4,9 @@ Sample plugin
 
 import logging
 
-from spock.plugins.base import PluginBase
+from spockbot.plugins.base import PluginBase
 
-logger = logging.getLogger('spock')
+logger = logging.getLogger('spockbot')
 
 
 class DemoPlugin(PluginBase):

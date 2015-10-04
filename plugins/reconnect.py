@@ -5,8 +5,8 @@ __author__ = "Nick Gamberini, Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
-from spock.mcp import mcdata, mcpacket
-from spock.plugins.base import PluginBase
+from spockbot.mcp import mcdata, mcpacket
+from spockbot.plugins.base import PluginBase
 
 
 class ReConnectPlugin(PluginBase):

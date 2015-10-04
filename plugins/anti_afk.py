@@ -5,7 +5,7 @@ __author__ = "Nick Gamberini, Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
-from spock.plugins.base import PluginBase
+from spockbot.plugins.base import PluginBase
 
 AFK_TIME = 5
 

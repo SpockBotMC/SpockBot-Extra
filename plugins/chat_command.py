@@ -1,5 +1,5 @@
 """
-Commands can be sent to spock in the format !command args from ingame chat
+Commands can be sent to spockbot in the format !command args from ingame chat
 """
 __author__ = "Morgan Creekmore"
 __copyright__ = "Copyright 2015, The SpockBot Project"
@@ -7,9 +7,9 @@ __license__ = "MIT"
 
 import logging
 
-from spock.plugins.base import PluginBase
+from spockbot.plugins.base import PluginBase
 
-logger = logging.getLogger('spock')
+logger = logging.getLogger('spockbot')
 
 
 class ChatCommandPlugin(PluginBase):

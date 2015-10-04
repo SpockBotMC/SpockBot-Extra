@@ -5,8 +5,8 @@ Basic demo example
 import os
 import sys
 
-from spock import Client
-from spock.plugins import default_plugins
+from spockbot import Client
+from spockbot.plugins import default_plugins
 
 # Bad but needed to import extra plugins from examples
 sys.path.insert(0, os.path.abspath('..'))

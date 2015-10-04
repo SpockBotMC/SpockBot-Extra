@@ -9,8 +9,8 @@ __author__ = "Nick Gamberini"
 __copyright__ = "Copyright 2015, The SpockBot Project"
 __license__ = "MIT"
 
-from spock.plugins.core.settings import PloaderFetch
-from spock.utils import get_settings, pl_announce
+from spockbot.plugins.core.settings import PloaderFetch
+from spockbot.plugins.base import get_settings, pl_announce
 
 # requires PyYAML
 import yaml
@@ -70,5 +70,5 @@ class YamlSettings:
         self.plugin_list.append((name, plugin))
 
 if __name__ == '__main__':
-    from spock import Client
+    from spockbot import Client
     Client(settings_mixin=YamlSettings, file_path='config.yaml').start()

@@ -9,13 +9,13 @@ import curses
 import logging
 import sys
 
-from spock.mcp.mcdata import (
+from spockbot.mcp.mcdata import (
     GM_ADVENTURE, GM_CREATIVE, GM_SPECTATOR, GM_SURVIVAL
 )
 
-from spock.plugins.base import PluginBase
+from spockbot.plugins.base import PluginBase
 
-logger = logging.getLogger('spock')
+logger = logging.getLogger('spockbot')
 
 PROMPT = '> '
 

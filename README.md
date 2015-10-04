@@ -1,8 +1,8 @@
 SpockBot-Extra
 =====
 
-A repo for useful plugins that do not belong in the base spock package.
-This repo also includes some examples and demos for how to use spock.
+A repo for useful plugins that do not belong in the base spockbot package.
+This repo also includes some examples and demos for how to use spockbot.
 
 ##Dependencies
 
