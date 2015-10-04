@@ -8,11 +8,11 @@ __license__ = "MIT"
 
 import logging
 
-from spock.mcdata.constants import PLAYER_HEIGHT
-from spock.plugins.base import PluginBase
-from spock.vector import Vector3
+from spockbot.mcdata.constants import PLAYER_HEIGHT
+from spockbot.plugins.base import PluginBase
+from spockbot.vector import Vector3
 
-logger = logging.getLogger('spock')
+logger = logging.getLogger('spockbot')
 
 
 class FollowPlugin(PluginBase):

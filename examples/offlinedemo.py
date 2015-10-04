@@ -4,8 +4,8 @@ Offline connection demo
 
 from demoplugin import DemoPlugin
 
-from spock import Client
-from spock.plugins import default_plugins
+from spockbot import Client
+from spockbot.plugins import default_plugins
 
 settings = {
     'start': {

@@ -9,13 +9,13 @@ import curses
 import logging
 import sys
 
-from spock.mcp.mcdata import (
+from spockbot.mcp.mcdata import (
     GM_ADVENTURE, GM_CREATIVE, GM_SPECTATOR, GM_SURVIVAL
 )
 
-from spock.plugins.base import PluginBase
+from spockbot.plugins.base import PluginBase
 
-logger = logging.getLogger('spock')
+logger = logging.getLogger('spockbot')
 
 PROMPT = '> '
 
@@ -183,7 +183,7 @@ class CursesCommandPlugin(PluginBase):
     requires = ('Event', 'Net', 'ClientInfo')
     events = {
         'event_tick': 'tick',
-        'kill': 'kill',
+        'event_kill': 'kill',
     }
 
     def __init__(self, ploader, settings):

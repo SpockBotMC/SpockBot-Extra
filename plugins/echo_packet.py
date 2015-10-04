@@ -8,9 +8,9 @@ __license__ = "MIT"
 
 import logging
 
-from spock.mcp.mcdata import hashed_structs
+from spockbot.mcp.mcdata import hashed_structs
 
-logger = logging.getLogger('spock')
+logger = logging.getLogger('spockbot')
 
 BLACKLIST = ['PLAY<Map Chunk Bulk', 'PLAY<Chunk Data', 'PLAY>Player Position']
 

@@ -8,8 +8,8 @@ __license__ = "MIT"
 
 import datetime
 
-from spock.plugins.base import PluginBase
-from spock.vector import Vector3
+from spockbot.plugins.base import PluginBase
+from spockbot.vector import Vector3
 
 
 class BaseCommandsPlugin(PluginBase):
