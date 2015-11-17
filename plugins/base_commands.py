@@ -38,18 +38,29 @@ class BaseCommandsPlugin(PluginBase):
         try:
             args = data['args']
             self.tpa_reqs[args[0]] = data['name']
-            self.net.push_packet('PLAY>Chat Message', {'message': '/tell ' + ''.join(args[0]) + ' would like to tpa to you, type (!)tpaccept or (!)tpdeny'})
+            self.net.push_packet('PLAY>Chat Message',
+                                 {'message': '/tell ' + ''.join(args[0]) +
+                                  ' would like to tpa to you, type '
+                                  + '(!)tpaccept or (!)tpdeny'})
         except IndexError:
-            self.net.push_packet('PLAY>Chat Message', {'message': '/tell ' + ''.join(data['name']) + ' Usage: (!)tpa [name]'})
+            self.net.push_packet('PLAY>Chat Message',
+                                 {'message': '/tell ' + ''.join(data['name']) +
+                                  ' Usage: (!)tpa [name]'})
+
     def handle_tpaccept(self, event, data):
         to_who = data['name']
         try:
             from_who = self.tpa_reqs[to_who]
-            self.net.push_packet('PLAY>Chat Message', {'message': '/tp ' + from_who + ' ' + to_who})
+            self.net.push_packet('PLAY>Chat Message',
+                                 {'message': '/tp ' + from_who +
+                                  ' ' + to_who})
             logger.debug(json.dumps(self.tpa_reqs))
-            del self.tpa_reqs[to_who] #clear the table.
+            del self.tpa_reqs[to_who]
         except:
-            self.net.push_packet('PLAY>Chat Message', {'message': '/tell ' + to_who + ' you have no pending tpa requests.'})
+            self.net.push_packet('PLAY>Chat Message',
+                                 {'message': '/tell ' + to_who +
+                                  ' you have no pending tpa requests.'})
+
     def handle_jump(self, event, data):
         self.physics.jump()
 
