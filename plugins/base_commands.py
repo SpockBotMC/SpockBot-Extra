@@ -33,6 +33,7 @@ class BaseCommandsPlugin(PluginBase):
     def __init__(self, ploader, settings):
         super(BaseCommandsPlugin, self).__init__(ploader, settings)
         self.tpa_reqs = {}
+
     def handle_tpa(self, event, data):
         try:
             args = data['args']
