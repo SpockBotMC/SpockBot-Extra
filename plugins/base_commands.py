@@ -16,7 +16,6 @@ logger = logging.getLogger('spockbot')
 
 
 class BaseCommandsPlugin(PluginBase):
-    tpareqs = {}
     requires = ('Net', 'Physics', 'Interact', 'Inventory')
     events = {
         'cmd_jump': 'handle_jump',
@@ -33,22 +32,23 @@ class BaseCommandsPlugin(PluginBase):
 
     def __init__(self, ploader, settings):
         super(BaseCommandsPlugin, self).__init__(ploader, settings)
+        self.tpa_reqs = {}
     def handle_tpa(self, event, data):
         try:
             args = data['args']
-            self.tpareqs[args[0]] = data['name']
+            self.tpa_reqs[args[0]] = data['name']
             self.net.push_packet('PLAY>Chat Message', {'message': '/tell ' + ''.join(args[0]) + ' would like to tpa to you, type (!)tpaccept or (!)tpdeny'})
         except IndexError:
             self.net.push_packet('PLAY>Chat Message', {'message': '/tell ' + ''.join(data['name']) + ' Usage: (!)tpa [name]'})
     def handle_tpaccept(self, event, data):
-        towho = data['name']
+        to_who = data['name']
         try:
-            fromwho = self.tpareqs[towho]
-            self.net.push_packet('PLAY>Chat Message', {'message': '/tp ' + fromwho + ' ' + towho})
-            logger.debug(json.dumps(self.tpareqs))
-            del self.tpareqs[towho] #clear the table.
+            from_who = self.tpa_reqs[to_who]
+            self.net.push_packet('PLAY>Chat Message', {'message': '/tp ' + from_who + ' ' + to_who})
+            logger.debug(json.dumps(self.tpa_reqs))
+            del self.tpa_reqs[to_who] #clear the table.
         except:
-            self.net.push_packet('PLAY>Chat Message', {'message': '/tell ' + towho + ' you have no pending tpa requests.'})
+            self.net.push_packet('PLAY>Chat Message', {'message': '/tell ' + to_who + ' you have no pending tpa requests.'})
     def handle_jump(self, event, data):
         self.physics.jump()
 
