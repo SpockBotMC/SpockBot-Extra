@@ -39,12 +39,12 @@ class BaseCommandsPlugin(PluginBase):
             args = data['args']
             self.tpa_reqs[args[0]] = data['name']
             self.net.push_packet('PLAY>Chat Message',
-                                 {'message': '/tell ' + ''.join(args[0]) +
+                                 {'message': '/tell ' + args[0] +
                                   ' would like to tpa to you, type '
                                   + '(!)tpaccept or (!)tpdeny'})
         except IndexError:
             self.net.push_packet('PLAY>Chat Message',
-                                 {'message': '/tell ' + ''.join(data['name']) +
+                                 {'message': '/tell ' + data['name'] +
                                   ' Usage: (!)tpa [name]'})
 
     def handle_tpaccept(self, event, data):
