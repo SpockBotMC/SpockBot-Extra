@@ -12,11 +12,11 @@ import logging
 from spockbot.plugins.base import PluginBase
 from spockbot.vector import Vector3
 import json
-tpareqs = {}
 logger = logging.getLogger('spockbot')
 
 
 class BaseCommandsPlugin(PluginBase):
+    tpareqs = {}
     requires = ('Net', 'Physics', 'Interact', 'Inventory')
     events = {
         'cmd_jump': 'handle_jump',
@@ -36,23 +36,17 @@ class BaseCommandsPlugin(PluginBase):
     def handle_tpa(self, event, data):
         try:
             args = data['args']
-            tpareqs[args[0]] = data['name']
+            self.tpareqs[args[0]] = data['name']
             self.net.push_packet('PLAY>Chat Message', {'message': '/tell ' + ''.join(args[0]) + ' would like to tpa to you, type (!)tpaccept or (!)tpdeny'})
         except IndexError:
             self.net.push_packet('PLAY>Chat Message', {'message': '/tell ' + ''.join(data['name']) + ' Usage: (!)tpa [name]'})
     def handle_tpaccept(self, event, data):
-        #args = data['args']
+        towho = data['name']
         try:
-            towho = data['name']
-            tpareqs[towho]
-            fromwho = tpareqs[towho]
-            if fromwho != "":
-                self.net.push_packet('PLAY>Chat Message', {'message': '/tp ' + fromwho + ' ' + towho})
-                logger.debug(json.dumps(tpareqs))
-                del tpareqs[towho] #clear the table.
-            else:
-                del tpareqs[towho] #clear the table.
-                self.net.push_packet('PLAY>Chat Message', {'message': '/tell ' + ''.join(data['name']) + ' A unknown error occured, try again later.'}) #they don't need to know what happened.
+            fromwho = self.tpareqs[towho]
+            self.net.push_packet('PLAY>Chat Message', {'message': '/tp ' + fromwho + ' ' + towho})
+            logger.debug(json.dumps(self.tpareqs))
+            del self.tpareqs[towho] #clear the table.
         except:
             self.net.push_packet('PLAY>Chat Message', {'message': '/tell ' + towho + ' you have no pending tpa requests.'})
     def handle_jump(self, event, data):
