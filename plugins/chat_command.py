@@ -26,7 +26,7 @@ class ChatCommandPlugin(PluginBase):
         self.prefix = self.settings['prefix']
 
     def handle_chat_message(self, event, data):
-        message = data['message']
+        message = data['message'] or data['text']
         try:
             command = message[message.index(self.prefix):]
             args = []
