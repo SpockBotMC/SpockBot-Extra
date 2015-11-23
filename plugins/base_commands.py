@@ -8,8 +8,11 @@ __license__ = "MIT"
 
 import datetime
 
+import logging
 from spockbot.plugins.base import PluginBase
 from spockbot.vector import Vector3
+import json
+logger = logging.getLogger('spockbot')
 
 
 class BaseCommandsPlugin(PluginBase):
@@ -23,10 +26,40 @@ class BaseCommandsPlugin(PluginBase):
         'cmd_place': 'handle_place',
         'cmd_break': 'handle_break',
         'cmd_click': 'handle_click',
+        'cmd_tpa': 'handle_tpa',
+        'cmd_tpaccept': 'handle_tpaccept',
     }
 
     def __init__(self, ploader, settings):
         super(BaseCommandsPlugin, self).__init__(ploader, settings)
+        self.tpa_reqs = {}
+
+    def handle_tpa(self, event, data):
+        try:
+            args = data['args']
+            self.tpa_reqs[args[0]] = data['name']
+            self.net.push_packet('PLAY>Chat Message',
+                                 {'message': '/tell ' + args[0] +
+                                  ' would like to tpa to you, type '
+                                  + '(!)tpaccept or (!)tpdeny'})
+        except IndexError:
+            self.net.push_packet('PLAY>Chat Message',
+                                 {'message': '/tell ' + data['name'] +
+                                  ' Usage: (!)tpa [name]'})
+
+    def handle_tpaccept(self, event, data):
+        to_who = data['name']
+        try:
+            from_who = self.tpa_reqs[to_who]
+            self.net.push_packet('PLAY>Chat Message',
+                                 {'message': '/tp ' + from_who +
+                                  ' ' + to_who})
+            logger.debug(json.dumps(self.tpa_reqs))
+            del self.tpa_reqs[to_who]
+        except:
+            self.net.push_packet('PLAY>Chat Message',
+                                 {'message': '/tell ' + to_who +
+                                  ' you have no pending tpa requests.'})
 
     def handle_jump(self, event, data):
         self.physics.jump()
