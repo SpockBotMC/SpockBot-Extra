@@ -16,7 +16,7 @@ logger = logging.getLogger('spockbot')
 
 
 class BaseCommandsPlugin(PluginBase):
-    requires = ('Net', 'Physics', 'Interact', 'Inventory')
+    requires = ('Net', 'Physics', 'Chat', 'Interact', 'Inventory')
     events = {
         'cmd_jump': 'handle_jump',
         'cmd_say': 'handle_say',
@@ -35,46 +35,36 @@ class BaseCommandsPlugin(PluginBase):
         self.tpa_reqs = {}
 
     def handle_tpa(self, event, data):
+        to_who = data['name']
         try:
-            args = data['args']
-            self.tpa_reqs[args[0]] = data['name']
-            self.net.push_packet('PLAY>Chat Message',
-                                 {'message': '/tell ' + args[0] +
-                                  ' would like to tpa to you, type '
-                                  + '(!)tpaccept or (!)tpdeny'})
+            from_who = data['args'][0]
+            self.tpa_reqs[from_who] = to_who
+            self.chat.whisper(from_who, to_who + ' would like to tpa to you,'
+                              + ' type (!)tpaccept or (!)tpdeny')
         except IndexError:
-            self.net.push_packet('PLAY>Chat Message',
-                                 {'message': '/tell ' + data['name'] +
-                                  ' Usage: (!)tpa [name]'})
+            self.chat.whisper(to_who, 'Usage: (!)tpa [name]')
 
     def handle_tpaccept(self, event, data):
         to_who = data['name']
         try:
             from_who = self.tpa_reqs[to_who]
-            self.net.push_packet('PLAY>Chat Message',
-                                 {'message': '/tp ' + from_who +
-                                  ' ' + to_who})
+            self.chat.chat('/tp %(from_who)s %(to_who)s' % locals())
             logger.debug(json.dumps(self.tpa_reqs))
             del self.tpa_reqs[to_who]
         except:
-            self.net.push_packet('PLAY>Chat Message',
-                                 {'message': '/tell ' + to_who +
-                                  ' you have no pending tpa requests.'})
+            self.chat.whisper(to_who, 'You have no pending tpa requests.')
 
     def handle_jump(self, event, data):
         self.physics.jump()
 
     def handle_say(self, event, data):
-        self.interact.chat(' '.join(data['args']))
+        self.chat.chat(' '.join(data['args']))
 
     def handle_date(self, event, data):
-        self.net.push_packet('PLAY>Chat Message',
-                             {'message': 'Current Date: ' +
-                              str(datetime.datetime.now())})
+        self.chat.chat('Current Date: ' + str(datetime.datetime.now()))
 
     def handle_command(self, event, data):
-        self.net.push_packet('PLAY>Chat Message',
-                             {'message': '/' + ' '.join(data['args'])})
+        self.chat.chat('/' + ' '.join(data['args']))
 
     def handle_hold(self, event, data):
         args = data['args']
